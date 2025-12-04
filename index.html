@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="mnhp.nl">
+<title>mnhp.nl</title>
+<style>
+html {
+  /* fix margin: auto inconsistancy */
+  overflow-y: scroll;
+  font-family: Cousine, monospace;
+  background-color: #897;
+  padding: 1rem;
+}
+
+body {
+  background-color: #ab9;
+  border: 2px solid #161;
+  margin: 0 auto;
+  max-width: 70ch;
+}
+
+h1 {
+  text-align: center;
+  font-size: medium;
+}
+
+main {
+  padding: 1rem;
+}
+
+#anthill-container {
+    text-align: center;
+}
+
+#anthill {
+    image-rendering: pixelated;
+}
+</style>
+<main>
+<h1>mnhp.nl</h1>
+<div id="anthill-container">
+<canvas id="anthill"></canvas>
+</div>
+</main>
+<script>
+function MakeAntHill(cnv, fps, cnt) {
+    var w = cnv.width;
+    var h = cnv.height;
+    var ctx = cnv.getContext("2d");
+    ctx.fillStyle = "black";
+    var mouse = { x: 0, y: 0 };
+    var ants = [];
+    cnv.onmousemove = function(evt) {
+        var rect = cnv.getBoundingClientRect();
+        mouse.x = (evt.clientX - rect.left) / (rect.right - rect.left) * w | 0;
+        mouse.y = (evt.clientY - rect.top) / (rect.bottom - rect.top) * h | 0;
+    }
+    cnv.onmousedown = function() {
+        ants.push({ x: mouse.x, y: mouse.y, sleep: 0 });
+    }
+
+    function PutPixel(data, x, y) {
+        data[y*w*4+x*4+3] = 255;
+    }
+
+    var hill = new Path2D();
+    hill.moveTo(0, h);
+    hill.lineTo(w/3, h/3);
+    hill.bezierCurveTo(w/2-w/15, h/6, w/2+w/15,h/6,w-w/3,h/3);
+    hill.lineTo(w, h);
+    hill.closePath();
+
+    var bg = ctx.createImageData(w, h);
+    var frame = ctx.createImageData(w, h);
+
+    function IsAntStanding(ant) {
+        return ctx.isPointInPath(hill, ant.x, ant.y);
+    }
+
+    function GetTime() {
+        return window.performance.now();
+    }
+
+    function UpdateAnt(ant) {
+        if (ant.sleep > GetTime())
+            return;
+        if (!IsAntStanding(ant)) {
+            ant.dir = 0;
+            ant.y += 3;
+            return;
+        } else if (ant.dir == undefined || Math.random()<0.06) {
+            var choices = [-1, 0, 1];
+            ant.dir = choices[Math.random()*3 | 0];
+        }
+        if (Math.random() < 0.01)
+            ant.sleep = GetTime() + 1000 + Math.random()*2000;
+        ant.x += ant.dir;
+        ant.y += 1;
+    }
+
+    function CreateAnt() {
+        var ant = { sleep: 0 };
+        do {
+            ant.x = Math.random()*w | 0;
+            ant.y = Math.random()*h | 0;
+        } while (!IsAntStanding(ant));
+        UpdateAnt(ant);
+        return ant;
+    }
+
+    function DrawAnt(ant) {
+        PutPixel(frame.data, ant.x, ant.y);
+        PutPixel(frame.data, ant.x-ant.dir, ant.y-1);
+    }
+
+    for (var i = 0; i < cnt; i++) {
+        ants[i] = CreateAnt();
+    }
+
+    function ManageAntSupply() {
+        for (var i = 0; i < ants.length; i++) {
+            if (ants[i].y > h)
+                ants[i] = CreateAnt();
+        }
+    }
+
+    function PutHillPixel(x, y) {
+        if (ctx.isPointInPath(hill, x, y)) {
+            PutPixel(bg.data, x, y);
+        }
+    }
+
+    for (var y = 0; y < h; y+=8) {
+        for (var x = 0; x < w; x+=8) {
+            PutHillPixel(x+1,y+1);
+            PutHillPixel(x+5,y+0);
+            PutHillPixel(x+4,y+2);
+            PutHillPixel(x+7,y+3);
+            PutHillPixel(x+2,y+4);
+            PutHillPixel(x+6,y+5);
+            PutHillPixel(x+3,y+6);
+            PutHillPixel(x+0,y+7);
+        }
+    }
+
+    function Draw() {
+        ctx.clearRect(0, 0, w, h);
+        frame.data.set(bg.data);
+        for (var i = 0; i < ants.length; i++) {
+            DrawAnt(ants[i]);
+        }
+        ctx.putImageData(frame, 0, 0);
+        for (var i = 0; i < ants.length; i++) {
+            UpdateAnt(ants[i]);
+        }
+        ManageAntSupply();
+    }
+    setInterval(Draw, 1000/fps);
+}
+
+var cnv = document.getElementById("anthill");
+cnv.height = cnv.width = 200;
+MakeAntHill(cnv, 10, 30);
+
+// does not work on webkit
+function Resize() {
+	var mult = Math.floor(cnv.parentElement.clientWidth / cnv.width * window.devicePixelRatio);
+	cnv.style.width = cnv.style.height = Math.floor(cnv.width * mult / window.devicePixelRatio) + "px";
+}
+
+var remove;
+function UpdateRatio() {
+  Resize();
+  if (remove)
+    remove();
+  var media = matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`);
+  media.addEventListener("change", UpdateRatio);
+  remove = () => media.removeEventListener("change", UpdateRatio);
+};
+
+UpdateRatio();
+
+// fallback
+window.addEventListener("resize", Resize);
+
+</script>
+</html>
