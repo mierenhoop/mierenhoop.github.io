@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="mnhp.nl">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wdth,wght@0,62.5..100,450;1,62.5..100,450&display=swap" rel="stylesheet">
+<title>Contact - mnhp.nl</title>
+<link href="style.css" rel="stylesheet">
+<style>
+main > table {
+  margin: auto;
+}
+</style>
+<div>
+<main>
+<h1>Contact</h1>
+<p>Feel free to send a question or any other kind of message. I check the email inbox more often. Use XMPP with OMEMO when confidentiality is important.</p>
+<table><tbody>
+<tr><td>Email: </td><td><a id="mail">maREM<span style="display:none">moo</span>OVEi&#x6C;&commat;&#x6D;nREMOVEhp.nl</a></td></tr>
+<tr><td>XMPP: </td><td><a href="xmpp:mnhp@conversations.im">mnhp@conversations.im</a></td></tr>
+</tbody></table>
+</main>
+<footer>
+<a style="float:left" href="/">Home</a><span style="float:right">Contact</span>
+</footer>
+</div>
+<script>
+WebAssembly.instantiate(new Uint8Array([0,97,115,109,1,0,0,0,1,5,1,96,0,
+  1,127,3,2,1,0,7,4,1,0,0,0,10,6,1,4,0,65,1,11])).then(({instance})=>{
+  if (instance.exports[""]() == 1)
+    mail.href="mailto:"+(mail.innerHTML=mail.innerText.replaceAll("REMOVE",""))
+  })
+</script>
+</html>

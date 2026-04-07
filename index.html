@@ -3,32 +3,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="mnhp.nl">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wdth,wght@0,62.5..100,450;1,62.5..100,450&display=swap" rel="stylesheet">
 <title>mnhp.nl</title>
+<link href="style.css" rel="stylesheet">
 <style>
-html {
-  /* fix margin: auto inconsistancy */
-  overflow-y: scroll;
-  font-family: Cousine, monospace;
-  background-color: #897;
-  padding: 1rem;
-}
-
-body {
-  background-color: #ab9;
-  border: 2px solid #161;
-  margin: 0 auto;
-  max-width: 70ch;
-}
-
-h1 {
-  text-align: center;
-  font-size: medium;
-}
-
-main {
-  padding: 1rem;
-}
-
 #anthill-container {
     text-align: center;
 }
@@ -37,12 +17,17 @@ main {
     image-rendering: pixelated;
 }
 </style>
+<div>
 <main>
 <h1>mnhp.nl</h1>
 <div id="anthill-container">
 <canvas id="anthill"></canvas>
 </div>
 </main>
+<footer>
+<span style="float:left">Home</span><a href="/contact" style="float:right">Contact</a>
+</footer>
+</div>
 <script>
 function MakeAntHill(cnv, fps, cnt) {
     var w = cnv.width;

@@ -1,0 +1,47 @@
+html {
+  /* fix margin: auto inconsistancy */
+  overflow-y: scroll;
+  font-family: "Noto Serif", serif;
+  font-variation-settings: "wdth" 92.5;
+  background-color: #889979 /*oklch(0.66 0.05 130)*/;
+  padding: 1rem;
+}
+
+body { margin: 0; }
+
+body > div {
+  background-color: #aabb9a /*oklch(0.77 0.05 130)*/;
+  border: 2px solid #4c5b3d /*oklch(0.45 0.05 130)*/;
+  margin: 0 auto;
+  max-width: 70ch;
+}
+
+main > h1 {
+  text-align: center;
+  font-size: medium;
+  border-bottom: 1px solid #4c5b3d /*oklch(0.45 0.05 130)*/;
+  padding-bottom: 1rem;
+  margin-top: 0;
+}
+
+a         { color: #123e86 /*oklch(0.38 0.13 260)*/; }
+a.visited { color: #632267 /*oklch(0.38 0.13 325)*/; }
+a.active  { color: #791b11 /*oklch(0.38 0.13  30)*/; }
+
+main {
+  padding: 1rem;
+}
+
+footer {
+  border-top: 1px solid #4c5b3d /*oklch(0.45 0.05 130)*/;
+  text-align: center;
+  user-select: none;
+  margin: 0 1rem .5rem 1rem;
+}
+
+/* Fix floats making block empty */
+footer::after {
+  display: block;
+  content: "";
+  clear: both;
+}
